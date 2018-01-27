@@ -21,9 +21,11 @@ export class Timeline {
       const fill = get(item, 'color.fill') || get(this.options, 'color.fill');
       const stroke = get(item, 'color.stroke') || get(this.options, 'color.stroke');
       const text = get(item, 'color.text') || get(this.options, 'color.text');
+      const line = get(item, 'color.line') || get(this.options, 'color.line');
       const font = get(item, 'text.font') || get(this.options, 'text.font');
       const align = get(item, 'text.align') || get(this.options, 'text.align');
       const baseline = get(item, 'text.baseline') || get(this.options, 'text.baseline');
+      const offset = get(item, 'offset') || get(this.options, 'offset');
 
       context.fillStyle = fill;
       context.strokeStyle = stroke;
@@ -36,6 +38,26 @@ export class Timeline {
 
       context.fillStyle = text;
       context.fillText(name, x, y);
+
+      if (item.dependencies) {
+        context.strokeStyle = line;
+
+        const terminal = new Point(x - width/2, y);
+        for (let j = 0; j < item.dependencies.length; j++) {
+          const source = objects[item.dependencies[j]];
+
+          const points = [
+            new Point(source.center.x + source.size.width/2, source.center.y),
+            new Point(source.center.x + source.size.width/2 + offset, source.center.y),
+            new Point(source.center.x + source.size.width/2 + offset, terminal.y),
+            terminal
+          ];
+
+          for (let i = 0; i < points.length-1; i++) {
+            new Line(points[i], points[i+1]).draw(context);
+          }
+        }
+      }
     }
   }
 }
