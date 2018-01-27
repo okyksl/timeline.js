@@ -1,10 +1,32 @@
-import { get } from './utils.js';
+import { get, merge } from './utils.js';
 import { Corner, Point, Size, Line, Rectangle } from './draw.js';
 
 export class Timeline {
+  static get options() {
+    return {
+      size: {
+        height: 50,
+        width: 150
+      },
+      radius: 0,
+      color: {
+        fill: 'transparent',
+        stroke: 'red',
+        text: 'black',
+        line: 'green'
+      },
+      text: {
+        font: '15px Arial',
+        align: 'center',
+        baseline: 'middle'
+      },
+      offset: 20
+    };
+  }
+
   constructor(items = {}, options = {}) {
     this.items = items;
-    this.options = options;
+    this.options = merge(options, Timeline.options);
   }
 
   draw(context) {
