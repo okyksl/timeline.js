@@ -9,3 +9,14 @@ export function get(object, path) {
   }
   return object;
 }
+
+export function merge(first, second) {
+  let result = {};
+  for (let key in second) {
+    result[key] = second[key];
+  }
+  for (let key in first) {
+    result[key] = first[key];
+  }
+  return result;
+}
