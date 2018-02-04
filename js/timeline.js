@@ -32,6 +32,10 @@ export class Timeline {
   }
 
   clean() {
+    if (!this.canvas) {
+      return;
+    }
+
     const context = this.canvas.getContext('2d');
 
     let minX = 0, minY = 0;
@@ -51,6 +55,9 @@ export class Timeline {
     if (canvas) {
       this.clean();
       this.canvas = canvas;
+    }
+    if (!this.canvas) {
+      throw 'No canvas to draw timeline!';
     }
 
     const context = this.canvas.getContext('2d');
