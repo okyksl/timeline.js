@@ -24,13 +24,20 @@ export class Timeline {
     };
   }
 
-  constructor(items = {}, options = {}) {
+  constructor(items = {}, options = {}, canvas = null) {
     this.items = items;
     this.options = merge(options, Timeline.options);
+    this.canvas = canvas;
+    this.objects = {};
   }
 
-  draw(context) {
-    let objects = {};
+  draw(canvas = null) {
+    if (canvas) {
+      this.canvas = canvas;
+    }
+
+    const context = this.canvas.getContext('2d');
+
     for (let key in this.items) {
       const item = this.items[key];
 
@@ -55,8 +62,8 @@ export class Timeline {
       context.textAlign = align;
       context.textBaseline = baseline;
 
-      objects[key] = new Rectangle(new Point(x, y), new Size(width, height), { radius: radius });
-      objects[key].draw(context);
+      this.objects[key] = new Rectangle(new Point(x, y), new Size(width, height), { radius: radius });
+      this.objects[key].draw(context);
 
       context.fillStyle = text;
       context.fillText(name, x, y);
@@ -66,7 +73,7 @@ export class Timeline {
 
         const terminal = new Point(x - width/2, y);
         for (let j = 0; j < item.dependencies.length; j++) {
-          const source = objects[item.dependencies[j]];
+          const source = this.objects[item.dependencies[j]];
 
           const points = [
             new Point(source.center.x + source.size.width/2, source.center.y),
