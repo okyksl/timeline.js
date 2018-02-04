@@ -31,8 +31,25 @@ export class Timeline {
     this.objects = {};
   }
 
+  clean() {
+    const context = this.canvas.getContext('2d');
+
+    let minX = 0, minY = 0;
+    let maxX = 0, maxY = 0;
+    for (let key in this.objects) {
+      minX = Math.min(minX, this.objects[key].center.x - this.objects[key].size.width);
+      minY = Math.min(minY, this.objects[key].center.y - this.objects[key].size.height);
+      maxX = Math.max(maxX, this.objects[key].center.x + this.objects[key].size.width);
+      maxY = Math.max(maxY, this.objects[key].center.y + this.objects[key].size.height);
+    }
+
+    context.clearRect(minX, minY, maxX, maxY);
+    this.objects = {};
+  }
+
   draw(canvas = null) {
     if (canvas) {
+      this.clean();
       this.canvas = canvas;
     }
 
